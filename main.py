@@ -1,14 +1,41 @@
 from transformers import pipeline, set_seed
 import os
 import discord
-
-from dotenv import load_dotenv
+import boto3
+'''from dotenv import load_dotenv
 from pathlib import Path
-
 dotenv_path = Path('.env')
 load_dotenv(dotenv_path=dotenv_path)
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')'''
 
-DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+
+def getParameter(param_name):
+    """
+    This function reads a secure parameter from AWS' SSM service.
+    The request must be passed a valid parameter name, as well as
+    temporary credentials which can be used to access the parameter.
+    The parameter's value is returned.
+    """
+    # Create the SSM Client
+    ssm = boto3.client('ssm',
+                       region_name='us-west-1a'
+                       )
+
+    # Get the requested parameter
+    response = ssm.get_parameters(
+        Names=[
+            param_name,
+        ],
+        WithDecryption=True
+    )
+
+    # Store the credentials in a variable
+    credentials = response['Parameters'][0]['Value']
+
+    return credentials
+
+
+DISCORD_TOKEN = getParameter("DISCORD_TOKEN")
 
 bot = discord.Client(intents=discord.Intents.all())
 
