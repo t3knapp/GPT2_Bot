@@ -58,7 +58,7 @@ async def on_ready():
     print("GPT2_Bot is in " + str(guild_count) + " guilds.")
 
 # Creating the GPT2 Pipeline to be used by the bot
-generator = pipeline('text-generation', model='gpt2')
+generator = pipeline('text-generation', model='distilgpt2')
 
 # EVENT LISTENER FOR WHEN A NEW MESSAGE IS SENT TO A CHANNEL.
 @bot.event
