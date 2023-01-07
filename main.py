@@ -18,7 +18,7 @@ def getParameter(param_name):
     """
     # Create the SSM Client
     ssm = boto3.client('ssm',
-                       region_name='us-west-1a'
+                       region_name='us-west-1'
                        )
 
     # Get the requested parameter
