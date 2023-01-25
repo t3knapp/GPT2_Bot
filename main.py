@@ -67,8 +67,6 @@ async def on_message(message):
     if message.content.find('AI!' or '!AI') != -1:
 
         # Uses GP2 to generate a message based on the prompt.
-        generator(message.content[3:], max_length=30, num_return_sequences=1)
-
         # Returns list of dicts, need to access and return generated text
         response = generator(message.content[3:], max_length=100, num_return_sequences=1)[0]['generated_text']
 
