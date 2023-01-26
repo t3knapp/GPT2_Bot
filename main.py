@@ -1,5 +1,6 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import os
+import torch
 import discord
 import boto3
 '''from dotenv import load_dotenv
@@ -58,9 +59,14 @@ async def on_ready():
     print("GPT2_Bot is in " + str(guild_count) + " guilds.")
 
 # Creating the GPT2 model to be used by the bot
-checkpoint = 'distilgpt2'
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
+print('device:', device)
+
+checkpoint = 'gpt2-large'
 tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 model = AutoModelForCausalLM.from_pretrained(checkpoint)
+model = model.to(device)
+print(checkpoint + ' model created!')
 
 # EVENT LISTENER FOR WHEN A NEW MESSAGE IS SENT TO A CHANNEL.
 @bot.event
@@ -73,13 +79,13 @@ async def on_message(message):
         prompt = message.content[3:]
 
         # Tokenizing the input and generating the output
-        inputs = tokenizer(prompt, return_tensors="pt")
+        inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
         # Using contrastive search
         # https://huggingface.co/docs/transformers/v4.26.0/en/generation_strategies#customize-text-generation
         outputs = model.generate(**inputs, penalty_alpha=0.6, top_k=4, max_new_tokens=100)
 
-        response = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        response = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
 
         await message.channel.send(response)
 
