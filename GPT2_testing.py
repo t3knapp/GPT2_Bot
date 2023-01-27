@@ -1,6 +1,9 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+
+
 print(torch.cuda.is_available())
+print(torch.version.cuda)
 
 checkpoint = "gpt2-medium"
 tokenizer = AutoTokenizer.from_pretrained(checkpoint)

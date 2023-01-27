@@ -9,7 +9,6 @@ dotenv_path = Path('.env')
 load_dotenv(dotenv_path=dotenv_path)
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')'''
 
-
 def getParameter(param_name):
     """
     This function reads a secure parameter from AWS' SSM service.
